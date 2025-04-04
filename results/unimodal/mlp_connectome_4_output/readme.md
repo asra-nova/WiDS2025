@@ -10,7 +10,7 @@ value: mean f1 for 5 fold cv
 key: layer dims and dropout rate
 value: best epoch for 5 fold cv
 
-## ...2.json
+## ..._2.json
 is for a different layer_dims and 0.0 to 0.5 dropout threshold experiment
 result was the same as the first one
 
