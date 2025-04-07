@@ -10,9 +10,5 @@ value: mean f1 for 5 fold cv
 key: layer dims and dropout rate
 value: best epoch for 5 fold cv
 
-## ..._2.json
-is for a different layer_dims and 0.0 to 0.5 dropout threshold experiment
-result was the same as the first one
-
-## `256-128-64-32-0.0.pth`
-is the optimal model trained for 20 epochs on the whole data.
+## `256-128-128-64-32-0.1.pth`
+is the optimal model trained for 25 epochs on the whole data. final f1 on the data: 0.42492138364779874
