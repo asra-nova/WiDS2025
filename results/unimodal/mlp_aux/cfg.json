@@ -1,0 +1,17 @@
+{
+  "train_x_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/aux.csv",
+  "train_labels_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
+  "layer_dims": [
+    [64, 32, 16],
+    [128, 64, 32],
+    [128, 64, 32, 16],
+    [256, 128, 64, 32],
+    [256, 128, 64, 32, 16],
+    [512, 256, 128, 64],
+    [512, 256, 128, 64, 32],
+    [512, 256, 128, 64, 32, 16]
+  ],
+  "dropouts": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
+  "seed": 42,
+  "max_epochs": 200
+}
