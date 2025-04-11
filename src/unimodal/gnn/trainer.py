@@ -80,7 +80,7 @@ def train_cv(
             all_preds, all_labels = [], []
             total_test_loss = 0.0
             with torch.no_grad():
-                for batch in tqdm(test_loader, leave=False):
+                for batch in test_loader:
                     batch = batch.to(device)
                     out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                     loss = criterion(out, batch.y)
@@ -168,9 +168,9 @@ def train(
     test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
 
     # Training loop
-    for epoch in range(num_epochs):
+    for epoch in trange(num_epochs):
         model.train()
-        for batch in tqdm(train_loader, leave=False):
+        for batch in train_loader:
             batch = batch.to(device)
             optimizer.zero_grad()
 
@@ -184,7 +184,7 @@ def train(
         all_preds, all_labels = [], []
         total_test_loss = 0.0
         with torch.no_grad():
-            for batch in tqdm(test_loader, leave=False):
+            for batch in test_loader:
                 batch = batch.to(device)
                 out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                 loss = criterion(out, batch.y)
@@ -213,7 +213,7 @@ def train(
     model.eval()
     all_preds = []
     with torch.no_grad():
-        for batch in tqdm(loader, leave=False):
+        for batch in loader:
             batch = batch.to(device)
             out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
             loss = criterion(out, batch.y)
