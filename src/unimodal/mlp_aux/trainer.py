@@ -168,4 +168,11 @@ def train(
                 model.state_dict()
             )  # Save the state_dict at the best epoch
 
-    return best_f1, best_epoch, best_state_dict
+    X = torch.concatenate(
+        (torch.tensor(X_train), torch.tensor(X_val))
+    )
+    preds = model(X.to(device))
+    preds = torch.argmax(preds.data, 1).cpu()
+    preds = preds.numpy()
+    
+    return best_f1, best_epoch, best_state_dict, preds

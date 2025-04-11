@@ -5,6 +5,7 @@ import torch
 import shutil
 import random
 import numpy as np
+import pandas as pd
 import torch.nn as nn
 from trainer import train_cv, train
 from sklearn.model_selection import KFold
@@ -23,7 +24,7 @@ def main():
 
     if not os.path.exists("./out"):
         os.makedirs("./out")
-    
+
     shutil.copy(cfg_path, "./out/cfg.json")
 
     seed = cfg["seed"]
@@ -33,7 +34,9 @@ def main():
     torch.cuda.manual_seed_all(seed)
 
     print("Loading data...")
-    X, y = get_data(cfg["train_x_path"], cfg["train_labels_path"])
+    X, y, train_X_df, train_y_df = get_data(
+        cfg["train_x_path"], cfg["train_labels_path"]
+    )
     class_weights = get_class_weights(y)
 
     criterion = nn.CrossEntropyLoss(weight=class_weights.to(device))
@@ -109,7 +112,7 @@ def main():
         X, y, test_size=0.2, random_state=seed
     )
 
-    best_f1, best_epoch, best_state_dict = train(
+    best_f1, best_epoch, best_state_dict, preds = train(
         X_train,
         X_val,
         y_train,
@@ -123,6 +126,11 @@ def main():
 
     print(f"Best F1: {best_f1}")
     print(f"Best epoch: {best_epoch}")
+
+    predictions = pd.DataFrame(
+        {"predictions": preds, "labels": y}, index=train_X_df.index
+    )
+    predictions.to_csv("./out/predictions.csv", index=True)
 
     model_name = "-".join(map(str, best_layer_dims)) + "-" + str(best_dropout)
     torch.save(best_state_dict, f"./out/{model_name}.pt")

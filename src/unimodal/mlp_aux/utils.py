@@ -44,7 +44,7 @@ def get_data(x_path, y_path):
     X = np.array(train_X_df.values, dtype=np.float32)
     y_two_vars = train_y_df.values
     y = np.array(y_two_vars[:, 0] * 2 + y_two_vars[:, 1], dtype=np.uint8)
-    return X, y
+    return X, y, train_X_df, train_y_df
 
 
 def get_class_weights(y):
