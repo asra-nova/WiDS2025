@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import torch
+import shutil
 import random
 import numpy as np
 import torch.nn as nn
@@ -22,6 +23,8 @@ def main():
 
     if not os.path.exists("./out"):
         os.makedirs("./out")
+    
+    shutil.copy(cfg_path, "./out/cfg.json")
 
     seed = cfg["seed"]
     random.seed(seed)
@@ -29,6 +32,7 @@ def main():
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
+    print("Loading data...")
     X, y = get_data(cfg["train_x_path"], cfg["train_labels_path"])
     class_weights = get_class_weights(y)
 
@@ -46,6 +50,7 @@ def main():
 
     for layer_dims in layer_dims_list:
         for dropout in dropout_list:
+            print(f"Training with layer dims: {layer_dims}, dropout: {dropout}")
             f1_scores, best_epochs = train_cv(
                 X,
                 y,
