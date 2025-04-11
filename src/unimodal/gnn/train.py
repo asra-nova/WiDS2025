@@ -35,7 +35,7 @@ def main():
     torch.cuda.manual_seed_all(seed)
 
     print("Loading data...")
-    X, y, train_X_df, _ = get_data(
+    graphs, y, train_X_df, _ = get_data(
         cfg["train_x_path"], cfg["train_labels_path"]
     )
     class_weights = get_class_weights(y)
@@ -56,9 +56,10 @@ def main():
         for dropout in dropout_list:
             print(f"Training with layer dims: {layer_dims}, dropout: {dropout}")
             f1_scores, best_epochs = train_cv(
-                X,
+                graphs,
                 y,
                 kf,
+                cfg['batch_size'],
                 device,
                 layer_dims,
                 dropout,
@@ -110,7 +111,7 @@ def main():
     print(f"Dropout: {best_dropout}")
 
     X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=0.2, random_state=seed
+        graphs, y, test_size=0.2, random_state=seed
     )
 
     best_f1, best_epoch, best_state_dict, preds = train(
@@ -118,6 +119,7 @@ def main():
         X_val,
         y_train,
         y_val,
+        cfg['batch_size'],
         device,
         best_layer_dims,
         best_dropout,
