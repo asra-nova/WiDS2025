@@ -22,8 +22,9 @@ def main():
     cfg = json.load(open(cfg_path, "r", encoding="utf-8"))
     print(f"Config: {json.dumps(cfg, indent=4)}")
 
-    if not os.path.exists("./out"):
-        os.makedirs("./out")
+    if os.path.exists("./out"):
+        shutil.rmtree("./out/")
+    os.makedirs("./out")
 
     shutil.copy(cfg_path, "./out/cfg.json")
 
