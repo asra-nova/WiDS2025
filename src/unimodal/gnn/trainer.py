@@ -1,5 +1,5 @@
 import torch
-from tqdm import tqdm
+from tqdm import trange
 from model import Model
 import torch.optim as optim
 from torch_geometric.loader import DataLoader
@@ -64,9 +64,9 @@ def train_cv(
         best_epoch = 0
 
         # Training loop
-        for epoch in range(num_epochs):
+        for epoch in trange(num_epochs, leave=False):
             model.train()
-            for batch in tqdm(train_loader, leave=False):
+            for batch in train_loader:
                 batch = batch.to(device)
                 optimizer.zero_grad()
 
