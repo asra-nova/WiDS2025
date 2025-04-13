@@ -133,7 +133,7 @@ def main():
     predictions = pd.DataFrame(
         {"predictions": preds, "labels": y}, index=train_X_df.index
     )
-    predictions.to_csv("./out/predictions.csv", index=True)
+    predictions.to_csv("./out/train_predictions.csv", index=True)
 
     model_name = "-".join(map(str, best_layer_dims)) + "-" + str(best_dropout)
     torch.save(best_state_dict, f"./out/{model_name}.pt")

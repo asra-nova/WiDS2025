@@ -36,15 +36,15 @@ def compute_leaderboard_f1_multiclass(y_true, y_pred):
 
 
 def get_data(x_path, y_path):
-    train_X_df = pd.read_csv(x_path)
-    train_y_df = pd.read_csv(y_path)
-    train_X_df.set_index("participant_id", inplace=True)
-    train_y_df.set_index("participant_id", inplace=True)
-    train_y_df = train_y_df.reindex(train_X_df.index)
-    X = np.array(train_X_df.values, dtype=np.float32)
-    y_two_vars = train_y_df.values
+    X_df = pd.read_csv(x_path)
+    y_df = pd.read_csv(y_path)
+    X_df.set_index("participant_id", inplace=True)
+    y_df.set_index("participant_id", inplace=True)
+    y_df = y_df.reindex(X_df.index)
+    X = np.array(X_df.values, dtype=np.float32)
+    y_two_vars = y_df.values
     y = np.array(y_two_vars[:, 0] * 2 + y_two_vars[:, 1], dtype=np.uint8)
-    return X, y, train_X_df, train_y_df
+    return X, y, X_df, y_df
 
 
 def get_class_weights(y):
