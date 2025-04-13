@@ -70,7 +70,13 @@ def train_cv(
                 batch = batch.to(device)
                 optimizer.zero_grad()
 
-                out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                out = model(
+                    batch.x,
+                    batch.edge_index,
+                    batch.edge_attr,
+                    batch.edge_weights,
+                    batch.batch,
+                )
                 loss = criterion(out, batch.y)
                 loss.backward()
                 optimizer.step()
@@ -82,7 +88,13 @@ def train_cv(
             with torch.no_grad():
                 for batch in test_loader:
                     batch = batch.to(device)
-                    out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                    out = model(
+                        batch.x,
+                        batch.edge_index,
+                        batch.edge_attr,
+                        batch.edge_weights,
+                        batch.batch,
+                    )
                     loss = criterion(out, batch.y)
                     total_test_loss += loss.item()
                     preds = out.argmax(dim=1).cpu().numpy()
@@ -174,7 +186,13 @@ def train(
             batch = batch.to(device)
             optimizer.zero_grad()
 
-            out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+            out = model(
+                batch.x,
+                batch.edge_index,
+                batch.edge_attr,
+                batch.edge_weights,
+                batch.batch,
+            )
             loss = criterion(out, batch.y)
             loss.backward()
             optimizer.step()
@@ -186,7 +204,13 @@ def train(
         with torch.no_grad():
             for batch in test_loader:
                 batch = batch.to(device)
-                out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                out = model(
+                    batch.x,
+                    batch.edge_index,
+                    batch.edge_attr,
+                    batch.edge_weights,
+                    batch.batch,
+                )
                 loss = criterion(out, batch.y)
                 total_test_loss += loss.item()
                 preds = out.argmax(dim=1).cpu().numpy()
