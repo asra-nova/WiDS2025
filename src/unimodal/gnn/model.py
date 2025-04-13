@@ -26,10 +26,10 @@ class Model(nn.Module):
             nn.Linear(in_dim, in_dim), nn.ReLU(), nn.Linear(in_dim, output_dim)
         )
 
-    def forward(self, x, edge_index, edge_attr, edge_weight, batch):
+    def forward(self, x, edge_index, edge_attr, batch):
 
         for conv, act, do in zip(self.convs, self.acts, self.dropouts):
-            x = conv(x, edge_index, edge_attr, edge_weight)
+            x = conv(x, edge_index, edge_attr)
             x = act(x)
             x = do(x)
 

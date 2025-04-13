@@ -51,9 +51,10 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
     data_list = []
     for i in trange(len(df)):
         edge_weights_upper = torch.tensor(df.iloc[i].values, dtype=torch.float)
-        edges = torch.cat([edge_weights_upper, edge_weights_upper]) + 1e-4  # symmetric
-        edge_attrs = torch.abs(edges.unsqueeze(1))
-        edge_weights = torch.sign(edges.unsqueeze(1))
+        edges = torch.cat(
+            [edge_weights_upper, edge_weights_upper]
+        )
+        edge_attrs = torch.relu(edges.unsqueeze(1))
 
         x = torch.eye(num_nodes)  # <-- constant node features here
 
@@ -61,7 +62,6 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
             x=x,
             edge_index=edge_list,
             edge_attr=edge_attrs,
-            edge_weights=edge_weights,
             num_nodes=num_nodes,
         )
         data_list.append(data)

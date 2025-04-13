@@ -74,7 +74,6 @@ def train_cv(
                     batch.x,
                     batch.edge_index,
                     batch.edge_attr,
-                    batch.edge_weights,
                     batch.batch,
                 )
                 loss = criterion(out, batch.y)
@@ -92,7 +91,6 @@ def train_cv(
                         batch.x,
                         batch.edge_index,
                         batch.edge_attr,
-                        batch.edge_weights,
                         batch.batch,
                     )
                     loss = criterion(out, batch.y)
@@ -190,7 +188,6 @@ def train(
                 batch.x,
                 batch.edge_index,
                 batch.edge_attr,
-                batch.edge_weights,
                 batch.batch,
             )
             loss = criterion(out, batch.y)
@@ -208,7 +205,6 @@ def train(
                     batch.x,
                     batch.edge_index,
                     batch.edge_attr,
-                    batch.edge_weights,
                     batch.batch,
                 )
                 loss = criterion(out, batch.y)
