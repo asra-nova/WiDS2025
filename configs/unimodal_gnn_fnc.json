@@ -1,6 +1,6 @@
 {
-  "train_x_path": "/Users/reza/School/2025/1-Spring/Advanced ML/Project/data/new/preprocessed_selected_features/train/connectome_matrices.csv",
-  "train_labels_path": "/Users/reza/School/2025/1-Spring/Advanced ML/Project/data/new/preprocessed_selected_features/train/labels.csv",
+  "train_x_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/connectome_matrices.csv",
+  "train_labels_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
   "layer_dims": [
     [16, 32],
     [16, 32, 64],
