@@ -54,17 +54,24 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
         edges = torch.cat(
             [edge_weights_upper, edge_weights_upper]
         )
-        edge_attrs = torch.relu(edges.unsqueeze(1))
+        edge_index = (edges > 0).nonzero(as_tuple=False).t()
+        edge_attr = edges[edge_index[0], edge_index[1]]
+        x = torch.eye(200)
 
-        x = torch.eye(num_nodes)  # <-- constant node features here
+        # Create graph data object
+        graph_data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+        data_list.append(graph_data)
+        # edge_attrs = torch.relu(edges.unsqueeze(1))
 
-        data = Data(
-            x=x,
-            edge_index=edge_list,
-            edge_attr=edge_attrs,
-            num_nodes=num_nodes,
-        )
-        data_list.append(data)
+        # x = torch.eye(num_nodes)  # <-- constant node features here
+
+        # data = Data(
+        #     x=x,
+        #     edge_index=edge_list,
+        #     edge_attr=edge_attrs,
+        #     num_nodes=num_nodes,
+        # )
+        # data_list.append(data)
 
     return data_list
 
