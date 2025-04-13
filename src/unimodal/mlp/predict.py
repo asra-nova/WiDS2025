@@ -5,13 +5,12 @@ import random
 import numpy as np
 import pandas as pd
 from model import Model
-from torchsummary import summary
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def main():
-    X_path, model_path = sys.argv[1:]
+    X_path, state_path = sys.argv[1:]
 
     X_df = pd.read_csv(X_path)
     X_df.set_index("participant_id", inplace=True)
@@ -23,8 +22,15 @@ def main():
     torch.manual_seed(42)
     torch.cuda.manual_seed_all(42)
 
-    model = torch.load(model_path, map_location=device)
-    summary(model=model, input_size=X.shape[1:])
+    state_name = os.path.basename(state_path)
+    dims = map(int, state_name.split("-")[:-1])
+    dims = list(dims)
+    dropout = float(state_name.split("-")[-1][:-3])
+    print("Dimensions:", dims, "Dropout:", dropout)
+
+    model = Model(input_dim=X.shape[1], layer_dims=dims, dropout=dropout, output_dim=4)
+    state = torch.load(state_path, map_location=device, weights_only=True)
+    model.load_state_dict(state)
 
     model.eval()
     with torch.no_grad():
