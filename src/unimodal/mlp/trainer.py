@@ -1,5 +1,6 @@
 import torch
 from model import Model
+from copy import deepcopy
 import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from utils import compute_leaderboard_f1_multiclass
@@ -164,9 +165,7 @@ def train(
             best_val_loss = val_loss
             best_f1 = f1
             best_epoch = epoch
-            best_state_dict = (
-                model.state_dict()
-            )  # Save the state_dict at the best epoch
+            best_state_dict = deepcopy(model.state_dict())
 
     X = torch.concatenate(
         (torch.tensor(X_train), torch.tensor(X_val))
