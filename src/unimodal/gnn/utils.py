@@ -38,40 +38,43 @@ def compute_leaderboard_f1_multiclass(y_true, y_pred):
     return (f1_adhd + f1_sex_f) / 2
 
 
-def get_upper_triangle_indices(n):
-    """Get the upper triangle indices for a square matrix of size n x n."""
-    return torch.triu_indices(n, n, offset=1)
+def get_upper_triangle_indices(num_nodes):
+    """Generate the upper triangle indices for a complete graph."""
+    row_indices, col_indices = torch.triu_indices(num_nodes, num_nodes, offset=1)
+    return torch.stack([row_indices, col_indices], dim=0)
 
 
 def create_pyg_graphs_from_df(df, num_nodes=200):
-    """Convert each row of df into a PyTorch Geometric graph with dummy node features."""
+    """Convert each row of df into a PyTorch Geometric graph with positive edge weights only."""
     upper_idx = get_upper_triangle_indices(num_nodes)
-    edge_list = torch.cat([upper_idx, upper_idx.flip(0)], dim=1)  # undirected edges
+    edge_list = upper_idx  # undirected edges (only upper triangle, already handled by upper_idx)
 
     data_list = []
     for i in trange(len(df)):
+        # Get the edge weights (correlations)
         edge_weights_upper = torch.tensor(df.iloc[i].values, dtype=torch.float)
-        edges = torch.cat(
-            [edge_weights_upper, edge_weights_upper]
+
+        # Keep only the positive edge weights
+        positive_edges = edge_weights_upper > 0
+        positive_edge_weights = edge_weights_upper[positive_edges]
+        positive_edge_indices = upper_idx[:, positive_edges]
+
+        # Prepare edge attributes
+        edge_attrs = torch.relu(
+            positive_edge_weights.unsqueeze(1)
+        )  # Apply ReLU to ensure non-negative attributes
+
+        # Create dummy node features (identity matrix as placeholder)
+        x = torch.eye(num_nodes)
+
+        # Construct the PyG Data object
+        data = Data(
+            x=x,
+            edge_index=positive_edge_indices,
+            edge_attr=edge_attrs,
+            num_nodes=num_nodes,
         )
-        edge_index = (edges > 0).nonzero(as_tuple=False).t()
-        edge_attr = edges[edge_index[0], edge_index[1]]
-        x = torch.eye(200)
-
-        # Create graph data object
-        graph_data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
-        data_list.append(graph_data)
-        # edge_attrs = torch.relu(edges.unsqueeze(1))
-
-        # x = torch.eye(num_nodes)  # <-- constant node features here
-
-        # data = Data(
-        #     x=x,
-        #     edge_index=edge_list,
-        #     edge_attr=edge_attrs,
-        #     num_nodes=num_nodes,
-        # )
-        # data_list.append(data)
+        data_list.append(data)
 
     return data_list
 

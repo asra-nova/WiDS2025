@@ -2,9 +2,7 @@
   "train_x_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/connectome_matrices.csv",
   "train_labels_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
   "layer_dims": [
-    [16, 32],
-    [16, 32, 64],
-    [16, 32, 64, 128]
+    [16, 32]
   ],
   "dropouts": [0.0],
   "seed": 42,
