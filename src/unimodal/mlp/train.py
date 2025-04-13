@@ -113,7 +113,7 @@ def main():
         X, y, test_size=0.2, random_state=seed
     )
 
-    best_f1, best_epoch, best_state_dict, preds = train(
+    best_f1, best_epoch, best_state_dict, best_model, preds = train(
         X_train,
         X_val,
         y_train,
@@ -134,7 +134,8 @@ def main():
     predictions.to_csv("./out/train_predictions.csv", index=True)
 
     model_name = "-".join(map(str, best_layer_dims)) + "-" + str(best_dropout)
-    torch.save(best_state_dict, f"./out/{model_name}.pt")
+    torch.save(best_state_dict, f"./out/{model_name}_state.pt")
+    torch.save(best_model, f"./out/{model_name}_state.pt")
 
 
 if __name__ == "__main__":

@@ -140,6 +140,7 @@ def train(
     best_f1 = 0.0
     best_epoch = 0
     best_state_dict = None  # To store the best model's state_dict
+    best_model = None
 
     # Training loop
     for epoch in range(num_epochs):
@@ -166,6 +167,7 @@ def train(
             best_f1 = f1
             best_epoch = epoch
             best_state_dict = deepcopy(model.state_dict())
+            best_model = deepcopy(model)
 
     X = torch.concatenate(
         (torch.tensor(X_train), torch.tensor(X_val))
@@ -174,4 +176,4 @@ def train(
     preds = torch.argmax(preds.data, 1).cpu()
     preds = preds.numpy()
     
-    return best_f1, best_epoch, best_state_dict, preds
+    return best_f1, best_epoch, best_state_dict, best_model, preds
