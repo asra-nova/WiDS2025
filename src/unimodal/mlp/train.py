@@ -135,7 +135,7 @@ def main():
 
     model_name = "-".join(map(str, best_layer_dims)) + "-" + str(best_dropout)
     torch.save(best_state_dict, f"./out/{model_name}_state.pt")
-    torch.save(best_model, f"./out/{model_name}_state.pt")
+    torch.save(best_model, f"./out/{model_name}.pt")
 
 
 if __name__ == "__main__":
