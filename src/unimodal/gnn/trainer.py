@@ -45,7 +45,7 @@ def train_cv(
         test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
 
         # Initialize the model with the current layer_dims and dropout
-        model = Model(dropout=dropout, hidden_dims=layer_dims).to(device)
+        model = Model(in_dim=200, dropout=dropout, hidden_dims=layer_dims).to(device)
 
         # Define the optimizer
         optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -152,7 +152,7 @@ def train(
     """
 
     # Initialize the model with the current layer_dims and dropout
-    model = Model(dropout=dropout, hidden_dims=layer_dims).to(device)
+    model = Model(in_dim=200, dropout=dropout, hidden_dims=layer_dims).to(device)
 
     # Define the optimizer
     optimizer = optim.Adam(model.parameters(), lr=0.001)
