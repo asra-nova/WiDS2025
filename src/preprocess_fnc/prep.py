@@ -110,4 +110,4 @@ def load_connectomes_row_by_row_with_progress(df_conn, sub_fol, chunk_size=20):
     )
 
 
-load_connectomes_row_by_row_with_progress(df, data_path)
+load_connectomes_row_by_row_with_progress(df, mode)
