@@ -44,7 +44,6 @@ def train_cv(
         train_loader = DataLoader(
             train_graphs,
             batch_size=batch_size,
-            shuffle=True,
             sampler=balanced_batch_sampler(y_train),
         )
         test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
@@ -182,7 +181,6 @@ def train(
     train_loader = DataLoader(
         train_graphs,
         batch_size=batch_size,
-        shuffle=True,
         sampler=balanced_batch_sampler(y_train),
     )
     test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
