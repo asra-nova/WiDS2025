@@ -14,24 +14,23 @@ class Model(nn.Module):
 
         self.convs = nn.ModuleList()
         self.acts = nn.ModuleList()
-        self.dropouts = nn.ModuleList()
 
         for out_dim in hidden_dims:
             self.convs.append(GCNConv(in_dim, out_dim))
             self.acts.append(nn.ReLU())
-            self.dropouts.append(nn.Dropout(dropout))
             in_dim = out_dim
 
+        self.dropout = nn.Dropout(dropout)
         self.classifier = nn.Sequential(
             nn.Linear(in_dim, in_dim), nn.ReLU(), nn.Linear(in_dim, output_dim)
         )
 
     def forward(self, x, edge_index, edge_attr, batch):
 
-        for conv, act, do in zip(self.convs, self.acts, self.dropouts):
+        for conv, act in zip(self.convs, self.acts):
             x = conv(x, edge_index, edge_attr)
             x = act(x)
-            x = do(x)
 
         x = global_mean_pool(x, batch)
+        x = self.dropout(x)
         return self.classifier(x)

@@ -4,7 +4,6 @@ import pandas as pd
 from tqdm import trange
 from sklearn.metrics import f1_score
 from torch_geometric.data import Data
-from torch_geometric.loader import DataLoader
 
 
 def compute_leaderboard_f1_multiclass(y_true, y_pred):
@@ -45,9 +44,8 @@ def get_upper_triangle_indices(num_nodes):
 
 
 def create_pyg_graphs_from_df(df, num_nodes=200):
-    """Convert each row of df into a PyTorch Geometric graph with positive edge weights only."""
+    """Convert each row of df into a PyTorch Geometric graph with positive undirected edges."""
     upper_idx = get_upper_triangle_indices(num_nodes)
-    edge_list = upper_idx  # undirected edges (only upper triangle, already handled by upper_idx)
 
     data_list = []
     for i in trange(len(df)):
@@ -59,10 +57,14 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
         positive_edge_weights = edge_weights_upper[positive_edges]
         positive_edge_indices = upper_idx[:, positive_edges]
 
-        # Prepare edge attributes
-        edge_attrs = torch.relu(
-            positive_edge_weights.unsqueeze(1)
-        )  # Apply ReLU to ensure non-negative attributes
+        # Create undirected edges by adding reverse edges
+        reverse_edge_indices = positive_edge_indices.flip(0)
+        undirected_edge_indices = torch.cat(
+            [positive_edge_indices, reverse_edge_indices], dim=1
+        )
+        undirected_edge_weights = torch.cat(
+            [positive_edge_weights, positive_edge_weights], dim=0
+        )
 
         # Create dummy node features (identity matrix as placeholder)
         x = torch.eye(num_nodes)
@@ -70,8 +72,10 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
         # Construct the PyG Data object
         data = Data(
             x=x,
-            edge_index=positive_edge_indices,
-            edge_attr=edge_attrs,
+            edge_index=undirected_edge_indices,
+            edge_attr=undirected_edge_weights.unsqueeze(
+                1
+            ),  # Keep edge weights for the undirected graph
             num_nodes=num_nodes,
         )
         data_list.append(data)
