@@ -189,6 +189,7 @@ def train(
     for epoch in trange(num_epochs):
         model.train()
         for batch in train_loader:
+            print(torch.unique(batch.y, return_counts=True))
             batch = batch.to(device)
             optimizer.zero_grad()
 
