@@ -74,7 +74,7 @@ def load_connectomes_row_by_row_with_progress(df_conn, sub_fol, chunk_size=20):
             temp_df = temp_df[['participant_id'] + [col for col in temp_df.columns if col != 'participant_id']]
 
             # Optionally save to a file to reduce memory usage
-            temp_df.to_csv(f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/skewsym_fnc/{sub_fol}/{idx // chunk_size}.csv", index=False)
+            temp_df.to_csv(f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/{sub_fol}/skewsym_fnc/{idx // chunk_size}.csv", index=False)
 
             # Clear lists and call garbage collection
             processed_matrices.clear()
@@ -93,7 +93,7 @@ def load_connectomes_row_by_row_with_progress(df_conn, sub_fol, chunk_size=20):
         + [col for col in result_df.columns if col != "participant_id"]
     ]
 
-    result_df.to_csv(f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/skewsym_fnc/{sub_fol}/{(idx // chunk_size) + 1}.csv", index=False)
+    result_df.to_csv(f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/{sub_fol}/skewsym_fnc/{(idx // chunk_size) + 1}.csv", index=False)
 
 load_connectomes_row_by_row_with_progress(x_test_df, 'test')
 
