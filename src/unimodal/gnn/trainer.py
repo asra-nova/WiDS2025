@@ -3,7 +3,7 @@ from tqdm import trange
 from model import Model
 import torch.optim as optim
 from torch_geometric.loader import DataLoader
-from utils import compute_leaderboard_f1_multiclass
+from utils import compute_leaderboard_f1_multiclass, balanced_batch_sampler
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 
@@ -41,7 +41,12 @@ def train_cv(
         for i, g in enumerate(test_graphs):
             g.y = torch.tensor(y_test[i], dtype=torch.long)
 
-        train_loader = DataLoader(train_graphs, batch_size=batch_size, shuffle=True)
+        train_loader = DataLoader(
+            train_graphs,
+            batch_size=batch_size,
+            shuffle=True,
+            sampler=balanced_batch_sampler(y_train),
+        )
         test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
 
         # Initialize the model with the current layer_dims and dropout
@@ -174,7 +179,12 @@ def train(
     for i, g in enumerate(test_graphs):
         g.y = torch.tensor(y_test[i], dtype=torch.long)
 
-    train_loader = DataLoader(train_graphs, batch_size=batch_size, shuffle=True)
+    train_loader = DataLoader(
+        train_graphs,
+        batch_size=batch_size,
+        shuffle=True,
+        sampler=balanced_batch_sampler(y_train),
+    )
     test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
 
     # Training loop

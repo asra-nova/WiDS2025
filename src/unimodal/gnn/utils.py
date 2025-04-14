@@ -4,6 +4,7 @@ import pandas as pd
 from tqdm import trange
 from sklearn.metrics import f1_score
 from torch_geometric.data import Data
+from torch.utils.data.sampler import SubsetRandomSampler
 
 
 def compute_leaderboard_f1_multiclass(y_true, y_pred):
@@ -81,6 +82,29 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
         data_list.append(data)
 
     return data_list
+
+
+def balanced_batch_sampler(y):
+    """Create a sampler that ensures balanced class distribution in each batch."""
+    # Get the indices of each class
+    class_indices = [np.where(y == i)[0] for i in np.unique(y)]
+
+    # Find the minimum number of samples in a class
+    min_class_size = min([len(indices) for indices in class_indices])
+
+    # Randomly undersample each class to have equal number of instances
+    undersampled_indices = []
+    for indices in class_indices:
+        undersampled_indices.append(
+            np.random.choice(indices, min_class_size, replace=False)
+        )
+
+    # Flatten the list and shuffle the indices to ensure random sampling
+    undersampled_indices = np.concatenate(undersampled_indices)
+    np.random.shuffle(undersampled_indices)
+
+    # Create a SubsetRandomSampler
+    return SubsetRandomSampler(undersampled_indices)
 
 
 def get_data(x_path, y_path):

@@ -35,12 +35,10 @@ def main():
     torch.cuda.manual_seed_all(seed)
 
     print("Loading data...")
-    graphs, y, train_X_df, _ = get_data(
-        cfg["train_x_path"], cfg["train_labels_path"]
-    )
-    class_weights = get_class_weights(y)
+    graphs, y, train_X_df, _ = get_data(cfg["train_x_path"], cfg["train_labels_path"])
+    # class_weights = get_class_weights(y)
 
-    criterion = nn.CrossEntropyLoss(weight=class_weights.to(device))
+    criterion = nn.CrossEntropyLoss()  # (weight=class_weights.to(device))
 
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
 
@@ -104,7 +102,7 @@ def main():
     # with open("./out/epoch_history.json", "w", encoding="utf-8") as f:
     #     json.dump(final_epoch_history, f, indent=4)
 
-    best_layer_dims, best_dropout = [16, 32], 0 #get_best_hyperparams(summary_results)
+    best_layer_dims, best_dropout = [16, 32], 0  # get_best_hyperparams(summary_results)
 
     print("Training with best hyperparameters:")
     print(f"Layer dims: {best_layer_dims}")
@@ -119,7 +117,7 @@ def main():
         X_val,
         y_train,
         y_val,
-        cfg['batch_size'],
+        cfg["batch_size"],
         device,
         best_layer_dims,
         best_dropout,
