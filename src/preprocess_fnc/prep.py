@@ -1,3 +1,4 @@
+import sys
 import gc
 import numpy as np
 import pandas as pd
@@ -7,9 +8,12 @@ import geomstats.datasets.utils as data_utils
 from tqdm import tqdm
 from geomstats.geometry.skew_symmetric_matrices import SkewSymmetricMatrices
 
+data_path = sys.argv[1]
+mode = sys.argv[2]
 
-x_train_df = pd.read_csv('/home/rmansouri1/school/advanced_ml/data/new/widsdatathon2025/TRAIN/TRAIN_FUNCTIONAL_CONNECTOME_MATRICES_new_36P_Pearson.csv')
-x_test_df = pd.read_csv('/home/rmansouri1/school/advanced_ml/data/new/widsdatathon2025/TEST/TEST_FUNCTIONAL_CONNECTOME_MATRICES.csv')
+
+df = pd.read_csv(data_path)
+
 
 def process_single_row(atts):
     """
@@ -31,6 +35,7 @@ def process_single_row(atts):
         return (matrix + correction_matrix).astype(np.float32).flatten()
     else:
         return matrix.astype(np.float32).flatten()
+
 
 def load_connectomes_row_by_row_with_progress(df_conn, sub_fol, chunk_size=20):
     """
@@ -70,11 +75,17 @@ def load_connectomes_row_by_row_with_progress(df_conn, sub_fol, chunk_size=20):
         if (idx + 1) % chunk_size == 0:
             # Convert to DataFrame and store
             temp_df = pd.DataFrame(processed_matrices)
-            temp_df['participant_id'] = participant_ids
-            temp_df = temp_df[['participant_id'] + [col for col in temp_df.columns if col != 'participant_id']]
+            temp_df["participant_id"] = participant_ids
+            temp_df = temp_df[
+                ["participant_id"]
+                + [col for col in temp_df.columns if col != "participant_id"]
+            ]
 
             # Optionally save to a file to reduce memory usage
-            temp_df.to_csv(f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/{sub_fol}/skewsym_fnc/{idx // chunk_size}.csv", index=False)
+            temp_df.to_csv(
+                f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/{sub_fol}/skewsym_fnc/{idx // chunk_size}.csv",
+                index=False,
+            )
 
             # Clear lists and call garbage collection
             processed_matrices.clear()
@@ -93,9 +104,10 @@ def load_connectomes_row_by_row_with_progress(df_conn, sub_fol, chunk_size=20):
         + [col for col in result_df.columns if col != "participant_id"]
     ]
 
-    result_df.to_csv(f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/{sub_fol}/skewsym_fnc/{(idx // chunk_size) + 1}.csv", index=False)
+    result_df.to_csv(
+        f"/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/{sub_fol}/skewsym_fnc/{(idx // chunk_size) + 1}.csv",
+        index=False,
+    )
 
-load_connectomes_row_by_row_with_progress(x_test_df, 'test')
 
-load_connectomes_row_by_row_with_progress(x_train_df, 'train')
-
+load_connectomes_row_by_row_with_progress(df, data_path)
