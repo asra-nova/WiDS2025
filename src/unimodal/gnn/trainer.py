@@ -187,9 +187,9 @@ def train(
 
     # Training loop
     for epoch in trange(num_epochs):
+        train_loss = 0.0
         model.train()
         for batch in train_loader:
-            print(torch.unique(batch.y, return_counts=True))
             batch = batch.to(device)
             optimizer.zero_grad()
 
@@ -200,6 +200,7 @@ def train(
                 batch.batch,
             )
             loss = criterion(out, batch.y)
+            train_loss += loss.item()
             loss.backward()
             optimizer.step()
 
@@ -225,6 +226,8 @@ def train(
         f1 = compute_leaderboard_f1_multiclass(all_labels, all_preds)
 
         scheduler.step(total_test_loss)
+        
+        print('train:', train_loss, 'val:', total_test_loss)
 
         # Track the best F1 and epoch based on validation loss
         if total_test_loss < best_val_loss:

@@ -67,6 +67,11 @@ def create_pyg_graphs_from_df(df, num_nodes=200):
             [positive_edge_weights, positive_edge_weights], dim=0
         )
 
+        # Remove self-edges (if any) from the edge indices
+        mask = undirected_edge_indices[0] != undirected_edge_indices[1]  # Exclude self-edges
+        undirected_edge_indices = undirected_edge_indices[:, mask]
+        undirected_edge_weights = undirected_edge_weights[mask]
+
         # Create dummy node features (identity matrix as placeholder)
         x = torch.eye(num_nodes)
 
