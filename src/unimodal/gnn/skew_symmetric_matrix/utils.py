@@ -50,6 +50,8 @@ def create_pyg_graph_from_flattened(edge_weights, num_nodes=200):
     """Convert the flattened edge weights (40,000 values) into a PyTorch Geometric graph."""
     # Reshape the 1D array of edge weights into a 200x200 adjacency matrix
     matrix = edge_weights.reshape(num_nodes, num_nodes)
+    
+    matrix = torch.tensor(matrix, dtype=torch.float32)
 
     # Extract the indices of non-zero (positive) edges
     edge_index = (matrix > 0).nonzero(as_tuple=False).t()
