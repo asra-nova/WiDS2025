@@ -1,5 +1,5 @@
 {
-  "train_x_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/connectome_matrices.csv",
+  "train_x_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/skewsym_fnc",
   "train_labels_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
   "layer_dims": [
     [64, 32, 16],
@@ -13,5 +13,6 @@
   ],
   "dropouts": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
   "seed": 42,
-  "max_epochs": 200
+  "max_epochs": 200,
+  "batch_size": 256
 }
