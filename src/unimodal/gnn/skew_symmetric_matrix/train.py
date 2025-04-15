@@ -10,7 +10,7 @@ import torch.nn as nn
 from trainer import train_cv, train
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
-from utils import get_data#, get_class_weights, get_best_hyperparams
+from utils import load_connectomes_from_folder#, get_class_weights, get_best_hyperparams
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
@@ -35,7 +35,7 @@ def main():
     torch.cuda.manual_seed_all(seed)
 
     print("Loading data...")
-    graphs, y, train_X_df, _ = get_data(cfg["train_x_path"], cfg["train_labels_path"])
+    graphs, y, train_y_df = load_connectomes_from_folder(cfg["train_x_path"], cfg["train_labels_path"])
     # class_weights = get_class_weights(y)
 
     criterion = nn.CrossEntropyLoss()  # (weight=class_weights.to(device))
@@ -129,7 +129,7 @@ def main():
     print(f"Best epoch: {best_epoch}")
 
     predictions = pd.DataFrame(
-        {"predictions": preds, "labels": y}, index=train_X_df.index
+        {"predictions": preds, "labels": y}, index=y_df.index
     )
     predictions.to_csv("./out/train_predictions.csv", index=True)
 

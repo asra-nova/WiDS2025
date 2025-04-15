@@ -122,7 +122,7 @@ def load_connectomes_from_folder(folder_path, labels_path, num_nodes=200):
             graphs.append(graph)
             labels.append(label)
 
-    return graphs, labels
+    return graphs, labels, y_df
 
 
 def balanced_batch_sampler(y):
