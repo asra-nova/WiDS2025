@@ -129,7 +129,7 @@ def main():
     print(f"Best epoch: {best_epoch}")
 
     predictions = pd.DataFrame(
-        {"predictions": preds, "labels": y}, index=y_df.index
+        {"predictions": preds, "labels": y}, index=train_y_df.index
     )
     predictions.to_csv("./out/train_predictions.csv", index=True)
 

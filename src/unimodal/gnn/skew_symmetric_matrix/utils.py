@@ -102,7 +102,7 @@ def load_connectomes_from_folder(folder_path, labels_path, num_nodes=200):
 
         # Iterate over each row in the CSV file (each row represents a graph)
         for _, row in df.iterrows():
-            edge_weights = row.values  # Flattened edge weights for the graph
+            edge_weights = row.drop("participant_id", axis=1).values  # Flattened edge weights for the graph
 
             # Extract the participant_id from the row (assuming participant_id is in the DataFrame)
             participant_id = row["participant_id"]
