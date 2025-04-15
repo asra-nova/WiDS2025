@@ -157,7 +157,7 @@ def train(
     model = Model(in_dim=200, dropout=dropout, hidden_dims=layer_dims).to(device)
 
     # Define the optimizer
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.SGD(model.parameters(), lr=0.01)
     scheduler = ReduceLROnPlateau(
         optimizer,
         mode="min",
@@ -173,10 +173,10 @@ def train(
     best_epoch = 0
     best_state_dict = None  # To store the best model's state_dict
 
-    for i, g in enumerate(train_graphs):
-        g.y = torch.tensor(y_train[i], dtype=torch.long)
-    for i, g in enumerate(test_graphs):
-        g.y = torch.tensor(y_test[i], dtype=torch.long)
+    # for i, g in enumerate(train_graphs):
+    #     g.y = torch.tensor(y_train[i], dtype=torch.long)
+    # for i, g in enumerate(test_graphs):
+    #     g.y = torch.tensor(y_test[i], dtype=torch.long)
 
     train_loader = DataLoader(
         train_graphs,

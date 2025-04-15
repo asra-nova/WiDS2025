@@ -49,8 +49,8 @@ def get_upper_triangle_indices(num_nodes):
 def create_pyg_graph_from_flattened(edge_weights, num_nodes=200):
     """Convert the flattened edge weights (40,000 values) into a PyTorch Geometric graph."""
     # Reshape the 1D array of edge weights into a 200x200 adjacency matrix
-    matrix = edge_weights.reshape(num_nodes, num_nodes)
-    
+    matrix = edge_weights.reshape(num_nodes, num_nodes).astype(np.float32)
+
     matrix = torch.tensor(matrix, dtype=torch.float32)
 
     # Extract the indices of non-zero (positive) edges
@@ -104,7 +104,10 @@ def load_connectomes_from_folder(folder_path, labels_path, num_nodes=200):
 
         # Iterate over each row in the CSV file (each row represents a graph)
         for _, row in df.iterrows():
-            edge_weights = row.drop("participant_id").values  # Flattened edge weights for the graph
+            edge_weights = row.drop(
+                "participant_id"
+            ).values  # Flattened edge weights for the graph
+            # print(edge_weights)
 
             # Extract the participant_id from the row (assuming participant_id is in the DataFrame)
             participant_id = row["participant_id"]
@@ -112,13 +115,13 @@ def load_connectomes_from_folder(folder_path, labels_path, num_nodes=200):
             # Fetch the label for the current participant
             label = y_df.loc[participant_id].values
 
+            label = label[0] * 2 + label[1]
+
             # Create a PyTorch Geometric graph from the edge weights
             graph = create_pyg_graph_from_flattened(edge_weights, num_nodes)
 
             # Attach the label to the graph
-            graph.y = torch.tensor(label, dtype=torch.long).unsqueeze(
-                0
-            )  # Ensure y is a tensor
+            graph.y = torch.tensor(label, dtype=torch.long)  # Ensure y is a tensor
 
             # Append the graph and label to the lists
             graphs.append(graph)
