@@ -23,13 +23,13 @@ def main():
     os.makedirs("./out")
 
     X_aux, _, _, _ = get_data(
-        "/Users/reza/School/2025/1-Spring/Advanced ML/Project/data/new/preprocessed_selected_features/train/aux.csv",
-        "/Users/reza/School/2025/1-Spring/Advanced ML/Project/data/new/preprocessed_selected_features/train/labels.csv",
+        "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/aux.csv",
+        "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
     )
 
     X_fnc, y, X_fnc_df, y_df = get_data(
-        "/Users/reza/School/2025/1-Spring/Advanced ML/Project/data/new/preprocessed_selected_features/train/connectome_matrices.csv",
-        "/Users/reza/School/2025/1-Spring/Advanced ML/Project/data/new/preprocessed_selected_features/train/labels.csv",
+        "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/connectome_matrices.csv",
+        "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
     )
 
     X_aux_train, X_aux_val, y_aux_train, y_aux_val = train_test_split(
