@@ -21,10 +21,11 @@ class UniModalMLP(nn.Module):
 class FusionLayer(nn.Module):
     def __init__(self, device):
         super(FusionLayer, self).__init__()
+        self.device = device
 
     def forward(self, modalities):
         batch_size = modalities[0].shape[0]
-        ones = torch.ones((batch_size, 1)).to(device)
+        ones = torch.ones((batch_size, 1)).to(self.device)
         for i in range(len(modalities)):
             modalities[i] = torch.cat((modalities[i], ones), dim=1)
         modality_1 = modalities[0]
