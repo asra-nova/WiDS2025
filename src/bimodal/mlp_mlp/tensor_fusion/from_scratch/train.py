@@ -57,7 +57,7 @@ def main():
         input_dim=X_fnc.shape[1], layer_dims=[256, 128, 64, 32], dropout=0.1
     ).to(device)
 
-    model = BiModalFusion(aux_model, fnc_model).to(device)
+    model = BiModalFusion(aux_model, fnc_model, device).to(device)
 
     best_f1, best_epoch, best_state_dict, preds = train(
         X_aux_train,

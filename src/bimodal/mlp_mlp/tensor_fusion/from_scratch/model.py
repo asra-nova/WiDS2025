@@ -19,12 +19,12 @@ class UniModalMLP(nn.Module):
 
 
 class FusionLayer(nn.Module):
-    def __init__(self):
+    def __init__(self, device):
         super(FusionLayer, self).__init__()
 
     def forward(self, modalities):
         batch_size = modalities[0].shape[0]
-        ones = torch.ones((batch_size, 1))
+        ones = torch.ones((batch_size, 1)).to(device)
         for i in range(len(modalities)):
             modalities[i] = torch.cat((modalities[i], ones), dim=1)
         modality_1 = modalities[0]
@@ -39,11 +39,11 @@ class FusionLayer(nn.Module):
 
 
 class BiModalFusion(nn.Module):
-    def __init__(self, aux_model, fnc_model):
+    def __init__(self, aux_model, fnc_model, device):
         super(BiModalFusion, self).__init__()
         self.model_1 = aux_model
         self.model_2 = fnc_model
-        self.fusion = FusionLayer()
+        self.fusion = FusionLayer(device)
         self.fc1 = nn.Linear(561, 64)
         self.fc2 = nn.Linear(64, 4)
 
