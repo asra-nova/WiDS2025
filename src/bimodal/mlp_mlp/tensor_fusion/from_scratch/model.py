@@ -53,5 +53,5 @@ class BiModalFusion(nn.Module):
         m2 = self.model_2(x_fnc)
         fused = self.fusion([m1, m2])
         out = self.fc1(fused)
-        out = self.fc2(fused)
+        out = self.fc2(out)
         return out
