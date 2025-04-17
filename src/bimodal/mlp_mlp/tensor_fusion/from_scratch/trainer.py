@@ -44,6 +44,8 @@ def train(
             val_loss = criterion(val_outputs, torch.tensor(y_val).to(device)).item()
             predicted = torch.argmax(val_outputs.data, 1).cpu()
             f1 = compute_leaderboard_f1_multiclass(y_val, predicted)
+            
+        print('train:', loss.item(), 'val:', val_loss)
 
         # Track the best F1 and epoch based on validation loss
         if val_loss < best_val_loss:
