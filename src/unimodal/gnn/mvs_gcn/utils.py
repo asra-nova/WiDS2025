@@ -53,7 +53,7 @@ def pos_neg_feats(X):
     corr_n = 0 - np.minimum(X, 0)  # pylint: disable=E1101
     data_array = [corr_p, corr_n]
     data_array = np.array(data_array)
-    data_array = np.transpose(X, (1, 0, 2, 3))
+    data_array = np.transpose(data_array, (1, 0, 2, 3))
     return X
 
 
