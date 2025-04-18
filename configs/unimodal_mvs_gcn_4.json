@@ -1,0 +1,7 @@
+{
+  "train_x_path": "/home/rmansouri1/school/advanced_ml/data/new/widsdatathon2025/TRAIN/TRAIN_FUNCTIONAL_CONNECTOME_MATRICES_new_36P_Pearson.csv",
+  "train_labels_path": "/home/rmansouri1/school/advanced_ml/data/new/preprocessed_selected_features/train/labels.csv",
+  "seed": 42,
+  "max_epochs": 500,
+  "phis": [0.4, 0.5, 0.6]
+}

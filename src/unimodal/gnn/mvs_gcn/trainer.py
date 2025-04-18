@@ -48,7 +48,7 @@ def train(
 
     optimizer = torch.optim.AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
-        lr=1e-4,
+        lr=1e-3,
         weight_decay=0.001,
     )
     scheduler = ReduceLROnPlateau(
@@ -82,6 +82,7 @@ def train(
         loss = loss1 + losses1 + loss2 + losses2 + loss3 + losses3
         loss.backward()
         optimizer.step()
+        train_loss = loss.item()
 
         # Evaluation loop
         model.eval()
@@ -105,6 +106,8 @@ def train(
             f1 = np.mean([f1_1, f1_2, f1_3])
 
         scheduler.step(val_loss)
+
+        print("epoch:", epoch, "train:", train_loss, "val:", val_loss)
 
         # Track the best F1 and epoch based on validation loss
         if val_loss < best_val_loss:

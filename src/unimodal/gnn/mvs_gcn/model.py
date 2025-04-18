@@ -1,7 +1,7 @@
 import math
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as Fn
 import numpy as np
 from torch.nn import init
 
@@ -37,17 +37,17 @@ class GCN(nn.Module):
             AXW = torch.matmul(adj, XW)  # batch *  num_node * feature_dim
         # I_cAXW = eye+self.c*AXW
         I_cAXW = eye + self.c * AXW
-        y_relu = F.relu(I_cAXW)
+        y_relu = Fn.relu(I_cAXW)
         temp = torch.mean(input=y_relu, dim=-2, keepdim=True) + 1e-6
         col_mean = temp.repeat([1, feature_dim, 1])
         y_norm = torch.divide(y_relu, col_mean)  # 正则化后的值
-        output = F.softplus(y_norm)
+        output = Fn.softplus(y_norm)
         # output = y_relu
         # 做个尝试
         if self.neg_penalty != 0:
             neg_loss = torch.multiply(
                 torch.tensor(self.neg_penalty),
-                torch.sum(F.relu(1e-6 - self.kernel)),
+                torch.sum(Fn.relu(1e-6 - self.kernel)),
             )
             self.losses.append(neg_loss)
         return output
@@ -158,7 +158,7 @@ class model_gnn(nn.Module):
         kernel,
         tell=None,
     ):
-        kernel_p = F.relu(kernel)
+        kernel_p = Fn.relu(kernel)
         batch_size = int(adj_matrix.shape[0])
         AF = torch.tensordot(adj_matrix, kernel_p, [[-1], [0]])
         reduced_adj_matrix = torch.transpose(
@@ -188,7 +188,7 @@ class model_gnn(nn.Module):
             if neg_penalty != 0:
                 neg_loss = torch.multiply(
                     torch.tensor(neg_penalty),
-                    torch.sum(F.relu(torch.tensor(1e-6) - kernel)),
+                    torch.sum(Fn.relu(torch.tensor(1e-6) - kernel)),
                 )
                 self.losses.append(neg_loss)
             self.losses.append(0.05 * torch.sum(torch.abs(kernel_p)))
@@ -210,7 +210,7 @@ class model_gnn(nn.Module):
             if neg_penalty != 0:
                 neg_loss = torch.multiply(
                     torch.tensor(neg_penalty),
-                    torch.sum(F.relu(torch.tensor(1e-6) - kernel)),
+                    torch.sum(Fn.relu(torch.tensor(1e-6) - kernel)),
                 )
                 self.losses1.append(neg_loss)
             self.losses1.append(0.05 * torch.sum(torch.abs(kernel_p)))
@@ -232,7 +232,7 @@ class model_gnn(nn.Module):
             if neg_penalty != 0:
                 neg_loss = torch.multiply(
                     torch.tensor(neg_penalty),
-                    torch.sum(F.relu(torch.tensor(1e-6) - kernel)),
+                    torch.sum(Fn.relu(torch.tensor(1e-6) - kernel)),
                 )
                 self.losses2.append(neg_loss)
             self.losses2.append(0.05 * torch.sum(torch.abs(kernel_p)))
@@ -403,7 +403,7 @@ class model_gnn(nn.Module):
         SimiLoss2 = self.SimiLoss2(score, score2)
         SimiLoss3 = self.SimiLoss2(score1, score2)
         # score = score.view(6,1)
-        # SimiLoss1 = F.cross_entropy(score.view(6, 1), score1.view(6, 1))
+        # SimiLoss1 = Fn.cross_entropy(score.view(6, 1), score1.view(6, 1))
 
         # score_ = self.load_s_c(self.kernel_n)
         # score_1 = self.load_s_c(self.kernel_n1)
@@ -429,14 +429,14 @@ class model_gnn(nn.Module):
         return output, output1, output2, loss, loss1, loss2
 
     def SimiLoss(self, F1, F2):
-        f1 = F.relu(F1)
-        f2 = F.relu(F2).T
+        f1 = Fn.relu(F1)
+        f2 = Fn.relu(F2).T
         O = torch.matmul(f1, f2)
         # O = O.trace()
         O0 = O.diagonal()
-        O1 = F.softmax(O0)
+        O1 = Fn.softmax(O0, dim=0)
         O2 = torch.log(O1).sum()
-        # U = F.relu(O)
+        # U = Fn.relu(O)
         # U1 = U.trace()
         # T = U.sum()
         # simi_loss1 = -torch.log(U1)
@@ -444,8 +444,8 @@ class model_gnn(nn.Module):
 
         ####
         # simi_loss1 = 0
-        # f1 = F.relu(F1).T
-        # f2 = F.relu(F2).T
+        # f1 = Fn.relu(F1).T
+        # f2 = Fn.relu(F2).T
         # for i in range(8):
         #     L = nn.CrossEntropyLoss()
         #     l = L(f1[i], f2[i])
@@ -459,9 +459,9 @@ class model_gnn(nn.Module):
         # s2 = S2.unsqueeze(0).T
         # O = torch.matmul(s1, s2)
         # # O = O.trace()
-        # O1 = F.softmax(O)
+        # O1 = Fn.softmax(O)
         # O2 = torch.log(O1)
-        # # U = F.relu(O)
+        # # U = Fn.relu(O)
         # # U1 = U.trace()
         # # T = U.sum()
         # # simi_loss1 = -torch.log(U1)
@@ -480,12 +480,12 @@ class model_gnn(nn.Module):
         return simi_loss2
 
     def load_s_c(self, F, F1, F2, F3, F4, F5):
-        F = F.relu(F).T
-        F1 = F.relu(F1).T
-        F2 = F.relu(F2).T
-        F3 = F.relu(F3).T
-        F4 = F.relu(F4).T
-        F5 = F.relu(F5).T
+        F = Fn.relu(F).T
+        F1 = Fn.relu(F1).T
+        F2 = Fn.relu(F2).T
+        F3 = Fn.relu(F3).T
+        F4 = Fn.relu(F4).T
+        F5 = Fn.relu(F5).T
         s = F  # 5 * 116
         s1 = F1  # 5 * 116
         s2 = F2  # 5 * 116

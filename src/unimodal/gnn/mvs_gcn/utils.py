@@ -52,9 +52,9 @@ def pos_neg_feats(X):
     corr_p = np.maximum(X, 0)  # pylint: disable=E1101
     corr_n = 0 - np.minimum(X, 0)  # pylint: disable=E1101
     data_array = [corr_p, corr_n]
-    data_array = np.array(data_array)
+    data_array = np.array(data_array, dtype=np.float32)
     data_array = np.transpose(data_array, (1, 0, 2, 3))
-    return X
+    return data_array
 
 
 def get_data(x_path, y_path, phis):
