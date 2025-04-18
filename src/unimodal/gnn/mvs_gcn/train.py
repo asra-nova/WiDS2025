@@ -34,7 +34,7 @@ def main():
     torch.cuda.manual_seed_all(seed)
 
     print("Loading data...")
-    Xs, X, y, train_X_df, _ = get_data(
+    X, Xs, y, train_X_df, _ = get_data(
         cfg["train_x_path"], cfg["train_labels_path"], phis=[0.4, 0.6, 0.65]
     )
     class_weights = get_class_weights(y)
