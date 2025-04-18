@@ -59,9 +59,9 @@ def pos_neg_feats(X):
 
 def get_data(x_path, y_path=None, phis=[0.4, 0.5, 0.6]):
     X_df = pd.read_csv(x_path)
+    X_df.set_index("participant_id", inplace=True)
     if y_path is not None:
         y_df = pd.read_csv(y_path)
-        X_df.set_index("participant_id", inplace=True)
         y_df.set_index("participant_id", inplace=True)
         y_df = y_df.reindex(X_df.index)
     else:
