@@ -48,6 +48,15 @@ def threshold(X, phis):
     return xs
 
 
+def pos_neg_feats(X):
+    corr_p = np.maximum(X, 0)  # pylint: disable=E1101
+    corr_n = 0 - np.minimum(X, 0)  # pylint: disable=E1101
+    data_array = [corr_p, corr_n]
+    data_array = np.array(data_array)
+    data_array = np.transpose(X, (1, 0, 2, 3))
+    return X
+
+
 def get_data(x_path, y_path, phis):
     X_df = pd.read_csv(x_path)
     y_df = pd.read_csv(y_path)
@@ -64,9 +73,12 @@ def get_data(x_path, y_path, phis):
     for i in range(X.shape[0]):
         X[i] += np.eye(200)
     Xs = threshold(X, phis)
+    XXs = []
+    for x in Xs:
+        XXs.append(pos_neg_feats(x))
     y_two_vars = y_df.values
     y = np.array(y_two_vars[:, 0] * 2 + y_two_vars[:, 1], dtype=np.uint8)
-    return X, Xs, y, X_df, y_df
+    return X, XXs, y, X_df, y_df
 
 
 def get_class_weights(y):
