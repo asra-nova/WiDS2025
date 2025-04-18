@@ -21,11 +21,13 @@ def main():
     cfg = json.load(open(cfg_path, "r", encoding="utf-8"))
     print(f"Config: {json.dumps(cfg, indent=4)}")
 
-    if os.path.exists("./out"):
-        shutil.rmtree("./out/")
-    os.makedirs("./out")
+    experiment_number = cfg_path[-6]
+    
+    if os.path.exists(f".out{experiment_number}"):
+        shutil.rmtree(f".out{experiment_number}/")
+    os.makedirs(f".out{experiment_number}")
 
-    shutil.copy(cfg_path, "./out/cfg.json")
+    shutil.copy(cfg_path, f".out{experiment_number}/cfg.json")
 
     seed = cfg["seed"]
     random.seed(seed)
@@ -35,7 +37,7 @@ def main():
 
     print("Loading data...")
     X, Xs, y, train_X_df, _ = get_data(
-        cfg["train_x_path"], cfg["train_labels_path"], phis=[0.4, 0.6, 0.65]
+        cfg["train_x_path"], cfg["train_labels_path"], cfg["phis"]
     )
     class_weights = get_class_weights(y)
 
@@ -70,25 +72,25 @@ def main():
     print(f"Best epoch: {best_epoch}")
 
     f1_dict = pd.DataFrame({"phi": [0.4, 0.6, 0.65], "f1": [f1_1, f1_2, f1_3]})
-    f1_dict.to_csv("./out/f1s.csv")
+    f1_dict.to_csv(f".out{experiment_number}/f1s.csv")
 
     predictions = pd.DataFrame(
         {"predictions": preds1, "labels": y}, index=train_X_df.index
     )
-    predictions.to_csv("./out/train_predictions1.csv", index=True)
+    predictions.to_csv(f".out{experiment_number}/train_predictions1.csv", index=True)
 
     predictions = pd.DataFrame(
         {"predictions": preds2, "labels": y}, index=train_X_df.index
     )
-    predictions.to_csv("./out/train_predictions2.csv", index=True)
+    predictions.to_csv(f".out{experiment_number}/train_predictions2.csv", index=True)
 
     predictions = pd.DataFrame(
         {"predictions": preds3, "labels": y}, index=train_X_df.index
     )
-    predictions.to_csv("./out/train_predictions3.csv", index=True)
+    predictions.to_csv(f".out{experiment_number}/train_predictions3.csv", index=True)
 
     model_name = "model"
-    torch.save(best_state_dict, f"./out/{model_name}.pt")
+    torch.save(best_state_dict, ff".out{experiment_number}/{model_name}.pt")
 
 
 if __name__ == "__main__":
