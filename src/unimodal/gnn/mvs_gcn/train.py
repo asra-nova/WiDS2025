@@ -90,7 +90,7 @@ def main():
     predictions.to_csv(f".out{experiment_number}/train_predictions3.csv", index=True)
 
     model_name = "model"
-    torch.save(best_state_dict, ff".out{experiment_number}/{model_name}.pt")
+    torch.save(best_state_dict, f".out{experiment_number}/{model_name}.pt")
 
 
 if __name__ == "__main__":
