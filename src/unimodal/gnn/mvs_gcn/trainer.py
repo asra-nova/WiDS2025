@@ -48,7 +48,7 @@ def train(
 
     optimizer = torch.optim.AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
-        lr=1e-3,
+        lr=1e-4,
         weight_decay=0.001,
     )
     scheduler = ReduceLROnPlateau(
