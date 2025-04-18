@@ -57,12 +57,15 @@ def pos_neg_feats(X):
     return data_array
 
 
-def get_data(x_path, y_path, phis):
+def get_data(x_path, y_path=None, phis=[0.4, 0.5, 0.6]):
     X_df = pd.read_csv(x_path)
-    y_df = pd.read_csv(y_path)
-    X_df.set_index("participant_id", inplace=True)
-    y_df.set_index("participant_id", inplace=True)
-    y_df = y_df.reindex(X_df.index)
+    if y_path is not None:
+        y_df = pd.read_csv(y_path)
+        X_df.set_index("participant_id", inplace=True)
+        y_df.set_index("participant_id", inplace=True)
+        y_df = y_df.reindex(X_df.index)
+    else:
+        y_df = None
     adj_rows = np.array(X_df.values, dtype=np.float32)
     X = np.zeros((adj_rows.shape[0], 200, 200))
     for i in range(X.shape[0]):
@@ -76,8 +79,11 @@ def get_data(x_path, y_path, phis):
     XXs = []
     for x in Xs:
         XXs.append(pos_neg_feats(x))
-    y_two_vars = y_df.values
-    y = np.array(y_two_vars[:, 0] * 2 + y_two_vars[:, 1], dtype=np.uint8)
+    if y_path is not None:
+        y_two_vars = y_df.values
+        y = np.array(y_two_vars[:, 0] * 2 + y_two_vars[:, 1], dtype=np.uint8)
+    else:
+        y = None
     return X, XXs, y, X_df, y_df
 
 
