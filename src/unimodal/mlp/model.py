@@ -9,9 +9,8 @@ class Model(nn.Module):
         for dim in layer_dims:
             layers.append(nn.Linear(prev_dim, dim))
             layers.append(nn.ReLU())
-            if dropout > 0:
-                layers.append(nn.Dropout(dropout))
             prev_dim = dim
+        layers.append(nn.Dropout(dropout))
         layers.append(nn.Linear(prev_dim, output_dim))
         self.layers = nn.Sequential(*layers)
 
