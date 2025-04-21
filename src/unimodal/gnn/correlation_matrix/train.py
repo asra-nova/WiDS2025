@@ -102,7 +102,7 @@ def main():
     # with open("./out/epoch_history.json", "w", encoding="utf-8") as f:
     #     json.dump(final_epoch_history, f, indent=4)
 
-    best_layer_dims, best_dropout = [16, 32, 64, 128], 0  # get_best_hyperparams(summary_results)
+    best_layer_dims, best_dropout = [16, 32], 0  # get_best_hyperparams(summary_results)
 
     print("Training with best hyperparameters:")
     print(f"Layer dims: {best_layer_dims}")

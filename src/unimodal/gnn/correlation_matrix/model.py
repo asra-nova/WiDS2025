@@ -21,9 +21,7 @@ class Model(nn.Module):
             in_dim = out_dim
 
         self.dropout = nn.Dropout(dropout)
-        self.classifier = nn.Sequential(
-            nn.Linear(in_dim, in_dim), nn.ReLU(), nn.Linear(in_dim, output_dim)
-        )
+        self.classifier = nn.Linear(in_dim, output_dim)
 
     def forward(self, x, edge_index, edge_attr, batch):
 
