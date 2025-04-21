@@ -36,9 +36,9 @@ def main():
 
     print("Loading data...")
     graphs, y, train_X_df, _ = get_data(cfg["train_x_path"], cfg["train_labels_path"])
-    # class_weights = get_class_weights(y)
+    class_weights = get_class_weights(y)
 
-    criterion = nn.CrossEntropyLoss()  # (weight=class_weights.to(device))
+    criterion = nn.CrossEntropyLoss(weight=class_weights.to(device))
 
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
 

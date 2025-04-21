@@ -41,11 +41,7 @@ def train_cv(
         for i, g in enumerate(test_graphs):
             g.y = torch.tensor(y_test[i], dtype=torch.long)
 
-        train_loader = DataLoader(
-            train_graphs,
-            batch_size=batch_size,
-            sampler=balanced_batch_sampler(y_train),
-        )
+        train_loader = DataLoader(train_graphs, batch_size=batch_size, shuffle=True)
         test_loader = DataLoader(test_graphs, batch_size=batch_size, shuffle=False)
 
         # Initialize the model with the current layer_dims and dropout
@@ -226,8 +222,8 @@ def train(
         f1 = compute_leaderboard_f1_multiclass(all_labels, all_preds)
 
         scheduler.step(total_test_loss)
-        
-        print('train:', train_loss, 'val:', total_test_loss)
+
+        print("train:", train_loss, "val:", total_test_loss)
 
         # Track the best F1 and epoch based on validation loss
         if total_test_loss < best_val_loss:
