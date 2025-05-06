@@ -51,12 +51,3 @@ pip install -r requirements.txt
 | Random Forest               | 0.556          | 0.464            |
 
 > Note: Leaderboard F1* reflects generalization to unseen i.i.d. test data.
-
-
-## Acknowledgements
-
-We thank the Healthy Brain Network (HBN) for providing the data used in this study, and the supporting faculty at Georgia State University for their guidance.
-
----
-
-© 2024 Georgia State University. All rights reserved.
